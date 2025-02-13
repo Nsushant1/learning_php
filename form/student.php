@@ -1,3 +1,15 @@
+<?php
+$conn = mysqli_connect('localhost', 'root', '', 'bca');
+
+if (!$conn) {
+    echo "Database connected";
+}
+$sql = "SELECT * FROM students";
+$result = mysqli_query($conn, $sql);
+
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -20,6 +32,17 @@
                     <th>Email</th>
                     <th>Address</th>
                 </tr>
+                <?php foreach ($result as $students) { ?>
+                    <tr>
+                        <td><?= $students['name'] ?></td>
+                        <td><?= $students['email'] ?></td>
+                        <td><?= $students['address'] ?></td>
+                        <td>
+                            <a href="">Edit</a>
+                            <a href="">Delete</a>
+                        </td>
+                    </tr>
+                <?php } ?>
             </thead>
         </table>
     </blockquote>
