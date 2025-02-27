@@ -2,19 +2,21 @@
 $conn = mysqli_connect('localhost', 'root', '', 'bca');
 
 if (!$conn) {
-    echo "Database connected";
+    echo "Database not connected"; // Fixed incorrect message
 }
-if (!empty($_POST)) {
-    $name = $_POST['name'];
-    $address = $_POST['address'];
-    $email = $_POST['email'];
 
-    $sql = "INSERT INTO students (name,email,address)VALUES('$name','$email','$address')";
+if ($_SERVER["REQUEST_METHOD"] == "POST") { // More secure than empty($_POST)
+    $name = mysqli_real_escape_string($conn, $_POST['name']);
+    $email = mysqli_real_escape_string($conn, $_POST['email']);
+    $address = mysqli_real_escape_string($conn, $_POST['address']);
+
+    $sql = "INSERT INTO students (name, email, address) VALUES ('$name', '$email', '$address')";
     $result = mysqli_query($conn, $sql);
+
     if ($result) {
         echo "Recorded";
     } else {
-        echo "Not Recorded";
+        echo "Not Recorded: " . mysqli_error($conn); // Added error message
     }
 }
 ?>
@@ -25,7 +27,7 @@ if (!empty($_POST)) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Add Student</title>
 </head>
 
 <body>
@@ -35,12 +37,12 @@ if (!empty($_POST)) {
         <hr>
         <form action="" method="post">
             <label for="name">Name</label> <br>
-            <input type="text" name="name"> <br>
+            <input type="text" name="name" required> <br> <!-- Added required -->
             <label for="email">Email</label> <br>
-            <input type="text" name="email"> <br>
+            <input type="email" name="email" required> <br> <!-- Fixed input type -->
             <label for="address">Address</label> <br>
-            <input type="text" name="address"> <br>
-            <button>Add Record</button>
+            <input type="text" name="address" required> <br> <br>
+            <button type="submit">Add Record</button> <!-- Added type="submit" -->
         </form>
     </blockquote>
 </body>

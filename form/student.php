@@ -2,11 +2,15 @@
 $conn = mysqli_connect('localhost', 'root', '', 'bca');
 
 if (!$conn) {
-    echo "Database connected";
+    echo "Database not connected"; // Fixed incorrect connection message
 }
+
 $sql = "SELECT * FROM students";
 $result = mysqli_query($conn, $sql);
 
+if (!$result) {
+    die("Query failed: " . mysqli_error($conn)); // Added error handling for query failure
+}
 
 ?>
 
@@ -16,7 +20,7 @@ $result = mysqli_query($conn, $sql);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Student Records</title>
 </head>
 
 <body>
@@ -31,19 +35,23 @@ $result = mysqli_query($conn, $sql);
                     <th>Name</th>
                     <th>Email</th>
                     <th>Address</th>
+                    <th>Action</th>
                 </tr>
-                <?php foreach ($result as $students) { ?>
+            </thead>
+            <tbody>
+                <?php foreach ($result as $key => $students) { ?>
                     <tr>
+                        <td><?= $key + 1 ?></td>
                         <td><?= $students['name'] ?></td>
                         <td><?= $students['email'] ?></td>
                         <td><?= $students['address'] ?></td>
                         <td>
-                            <a href="">Edit</a>
-                            <a href="">Delete</a>
+                            <a href="edit.php?id=<?= $students['id'] ?>">Edit</a> <!-- Fixed URL -->
+                            <a href="delete.php?id=<?= $students['id'] ?>">Delete</a>
                         </td>
                     </tr>
                 <?php } ?>
-            </thead>
+            </tbody>
         </table>
     </blockquote>
 </body>
